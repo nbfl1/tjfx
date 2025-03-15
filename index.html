@@ -341,7 +341,10 @@
             '🚫': { desc: "拒绝提供数据", score: -20, color: '#9C27B0', case: "某单位拒报被列入失信名单" }
         };
 
-        // 初始化游戏
+        /**
+         * 初始化游戏
+         * @param {string} difficulty - 游戏难度，可选值：'easy', 'medium', 'hard'
+         */
         function initGame(difficulty) {
             gameState.currentDifficulty = difficulty;
 
@@ -414,13 +417,18 @@
             gameLoop();
         }
 
-        // 开始游戏
+        /**
+         * 开始游戏
+         * @param {string} difficulty - 游戏难度，可选值：'easy', 'medium', 'hard'
+         */
         function startGame(difficulty) {
             difficultySelectorElement.style.display = 'none';
             initGame(difficulty);
         }
 
-        // 游戏主循环
+        /**
+         * 游戏主循环
+         */
         function gameLoop() {
             if (!gameState.isGameActive) return;
             
@@ -441,7 +449,9 @@
             requestAnimationFrame(gameLoop);
         }
 
-        // 绘制玩家
+        /**
+         * 绘制玩家
+         */
         function drawPlayer() {
             const p = gameState.player;
             
@@ -479,7 +489,10 @@
             ctx.stroke();
         }
 
-        // 生成新物品
+        /**
+         * 生成新物品
+         * @returns {Object} - 包含物品信息的对象
+         */
         function createItem() {
             const allItems = [...GOOD_ITEMS, ...BAD_ITEMS];
             // 根据坏物品概率决定物品类型
@@ -493,7 +506,9 @@
             };
         }
 
-        // 更新物品状态
+        /**
+         * 更新物品状态
+         */
         function updateItems() {
             for (let i = gameState.items.length - 1; i >= 0; i--) {
                 const item = gameState.items[i];
@@ -518,7 +533,10 @@
             }
         }
 
-        // 处理碰撞
+        /**
+         * 处理碰撞
+         * @param {Object} item - 碰撞的物品对象
+         */
         function handleCollision(item) {
             gameState.score += ITEM_PROPERTIES[item.type].score;
             scoreElement.textContent = `得分：${gameState.score}`;
@@ -544,7 +562,11 @@
             }, 3000);
         }
 
-        // 创建爆炸效果
+        /**
+         * 创建爆炸效果
+         * @param {number} x - 爆炸的 x 坐标
+         * @param {number} y - 爆炸的 y 坐标
+         */
         function createExplosion(x, y) {
             gameState.explosions.push({
                 x: x,
@@ -555,7 +577,9 @@
             });
         }
 
-        // 更新爆炸效果
+        /**
+         * 更新爆炸效果
+         */
         function updateExplosions() {
             for (let i = gameState.explosions.length - 1; i >= 0; i--) {
                 const explosion = gameState.explosions[i];
@@ -573,7 +597,12 @@
             }
         }
 
-        // 碰撞检测
+        /**
+         * 碰撞检测
+         * @param {Object} player - 玩家对象
+         * @param {Object} item - 物品对象
+         * @returns {boolean} - 是否发生碰撞
+         */
         function checkCollision(player, item) {
             return (
                 player.x < item.x + 30 &&
@@ -583,14 +612,18 @@
             );
         }
 
-        // 更新计时器
+        /**
+         * 更新计时器
+         */
         function updateTimer() {
             const minutes = Math.floor(gameState.remainingTime / 60);
             const seconds = gameState.remainingTime % 60;
             timerElement.textContent = `剩余时间：${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        // 结束游戏
+        /**
+         * 结束游戏
+         */
         function endGame() {
             gameState.isGameActive = false;
             clearInterval(gameState.gameInterval);
@@ -693,7 +726,10 @@
             }
         });
 
-        // 显示指定界面
+        /**
+         * 显示指定界面
+         * @param {string} screenName - 界面名称，可选值：'game', 'gameOver', 'difficultySelector', 'historyRecords', 'endGameMenu', 'mainMenu'
+         */
         function showScreen(screenName) {
             // 隐藏所有界面
             const allScreens = [
@@ -722,7 +758,9 @@
             }
         }
 
-        // 查看历史记录
+        /**
+         * 查看历史记录
+         */
         function showHistoryRecords() {
             const recordList = document.getElementById('recordList');
             recordList.innerHTML = '';
@@ -741,22 +779,30 @@
             showScreen('historyRecords');
         }
 
-        // 关闭历史记录
+        /**
+         * 关闭历史记录
+         */
         function closeHistoryRecords() {
             showScreen('endGameMenu');
         }
 
-        // 显示难度选择界面
+        /**
+         * 显示难度选择界面
+         */
         function showDifficultySelector() {
             showScreen('difficultySelector');
         }
 
-        // 显示主菜单
+        /**
+         * 显示主菜单
+         */
         function showMainMenu() {
             showScreen('mainMenu');
         }
 
-        // 显示游戏规则
+        /**
+         * 显示游戏规则
+         */
         function showGameRules() {
             // 隐藏当前显示的界面
             const currentScreens = [
@@ -773,25 +819,33 @@
             gameInfoElement.style.transform = 'translate(-50%, -50%)';
         }
 
-        // 隐藏游戏规则
+        /**
+         * 隐藏游戏规则
+         */
         function hideGameRules() {
             gameInfoElement.style.display = 'none';
             showScreen('mainMenu');
         }
 
-        // 隐藏游戏中的规则
+        /**
+         * 隐藏游戏中的规则
+         */
         function hideInGameRules() {
             gameInfoInGameElement.style.display = 'none';
         }
 
-        // 重新开始游戏
+        /**
+         * 重新开始游戏
+         */
         function restartGame() {
             if (gameState.currentDifficulty) {
                 initGame(gameState.currentDifficulty);
             }
         }
 
-        // 退出游戏
+        /**
+         * 退出游戏
+         */
         function exitGame() {
             // 这里可以添加退出逻辑，比如返回到主菜单或完全关闭应用
             showScreen('mainMenu');
